@@ -64,3 +64,4 @@ zope.component==4.4.1
 zope.event==4.3.0
 zope.interface==4.5.0
 validators==0.14.2
+django-cors-headers==3.2.1

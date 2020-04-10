@@ -24,9 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xr%j*p!*$0d%(-(e%@-*hyoz4$f%y77coq0u)6pwmjg4)q&19f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -66,13 +69,16 @@ INSTALLED_APPS = [
     'containerization',
     'CLManager',
     'IncBackups',
-    'WebTerminal'
+    'WebTerminal',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,7 +93,7 @@ ROOT_URLCONF = 'CyberCP.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'client/build')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -111,8 +117,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cyberpanel',
-        'USER': 'cyberpanel',
-        'PASSWORD': 'Bz9gF7Hr7X4RtD',
+        'USER': 'root',
+        'PASSWORD': '1234',
         'HOST': '127.0.0.1',
         'PORT':'3307'
     },
@@ -120,7 +126,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mysql',
         'USER': 'root',
-        'PASSWORD': 'sXm5VlRaAsXkDd',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '',
     },
@@ -163,7 +169,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
+REACT_APP_DIR = os.path.join(BASE_DIR, 'client')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static/"),
+    os.path.join(REACT_APP_DIR, 'build', 'static'),
+]
 
 STATIC_URL = '/static/'
 

@@ -1,0 +1,140 @@
+$font-family-sans-serif: Open Sans, sans-serif;
+
+$theme-colors: (
+        "blue": #179bd7,
+        "grey": #f0eff0,
+        "dark-blue": #293a4a,
+        "dark-blue-1": #344453
+);
+
+.form-control.border-0 {
+  border:0;
+}
+.form-control.border-1 {
+  border:1px;
+}
+.form-control.border-2 {
+  border:2px;
+}
+.form-control.border-3 {
+  border:3px;
+}
+.form-control.border-4 {
+  border:4px;
+}
+.form-control.border-5 {
+  border:5px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-btn {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border: 1px solid #095779 !important;
+}
+
+.login-text-input {
+  border-top: 2px solid #ced4da !important;
+  border-bottom: 2px solid #ced4da !important;
+  border-right: 2px solid #ced4da !important;
+  border-left: 0 !important;
+}
+
+.login-input-prepend {
+  border-top: 2px solid #ced4da !important;
+  border-bottom: 2px solid #ced4da !important;
+  border-right: 0 !important;
+  border-left: 2px solid #ced4da !important;
+}
+
+.reset-password-link {
+  font-size: 13px;
+  color: #333;
+  font-weight: 600;
+}
+
+.reset-password-link:hover {
+  color: #ff6c2c;
+}
+
+.copyright {
+  color: #3f4143;
+  font-size: 7pt;
+  font-weight: 600;
+}
+
+.privacy-policy-link {
+  color: #3f4143;
+  font-size: 7pt;
+  font-weight: 600;
+}
+
+.privacy-policy-link:hover {
+  color: #ff6c2c;
+}
+
+.menu-labels {
+  font-size: 13px;
+}
+
+.menu-search:focus {
+  color: #fff !important;
+}
+
+.menu-item-border {
+  border-right: 1px solid #344453;
+}
+
+.main-menu-dropdown-item:hover {
+  background-color: #344453 !important;
+  color: #fff !important;
+}
+
+.main-menu-dropdown-item {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.sidebar {
+  position: fixed;
+  padding: 0 !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  max-width: 4vw !important;
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.sidebar-icons {
+  font-size: 2em;
+  font-weight: 900;
+}
+
+.category-item-image-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.category-card {
+  font-size: 14px !important;
+}
+
+.side-card-label {
+  font-weight: 600;
+}
+
+@import "../node_modules/bootstrap/scss/bootstrap";

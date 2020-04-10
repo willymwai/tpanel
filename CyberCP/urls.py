@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
+from django.views.generic import TemplateView
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 urlpatterns = [
-    url(r'^base/',include('baseTemplate.urls')),
+    url(r'^base/', include('baseTemplate.urls')),
+    url(r'^app/', ensure_csrf_cookie(TemplateView.as_view(template_name='index.html')), name='app'),
     url(r'^', include('loginSystem.urls')),
     url(r'^packages/',include('packages.urls')),
     url(r'^websites/',include('websiteFunctions.urls')),
