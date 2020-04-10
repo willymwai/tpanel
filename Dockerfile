@@ -1,6 +1,6 @@
 FROM node:13.12.0-alpine as client
 
-WORKDIR /usr/tpanel/client/
+WORKDIR /usr/client/
 COPY client/package*.json ./
 RUN npm install
 COPY client/ ./
@@ -8,12 +8,11 @@ RUN npm run build
 
 FROM python:3.6
 WORKDIR /usr/tpanel/
-COPY --from=client /usr/tpanel/client/build/ ./client/build/
+COPY --from=client /usr/client/build/ ./client/build/
 ENV PYTHONUNBUFFERED 1
-WORKDIR /usr/tpanel
-COPY requirements.txt /tpanel/
+COPY requirements.txt ./
 RUN pip install -r requirements.txt
-COPY . /tpanel/
+COPY . ./
 
 
 RUN python manage.py collectstatic --noinput
