@@ -37,7 +37,7 @@
 }
 .progress-animated .progress-bar,
 .progress-animated .bar {
-    background: url('../images/animated-overlay.gif') !important;
+    background: url('../../images/animated-overlay.gif') !important;
     filter: none;
 }
 .fileupload-process {
@@ -49,7 +49,7 @@
     display: block;
     width: 32px;
     height: 32px;
-    background: url('../images/loader-dark.gif') center no-repeat;
+    background: url('../../images/loader-dark.gif') center no-repeat;
     background-size: contain;
 }
 .files audio,
