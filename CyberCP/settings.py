@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from django.utils.translation import ugettext_lazy as _
-django.contrib.staticfiles.storage.ManifestStaticFilesStorage
+from django.contrib.staticfiles.storage import ManifestStaticFilesStorage
 
 class DjsManifestStaticFilesStorage(ManifestStaticFilesStorage):
     manifest_strict = False
