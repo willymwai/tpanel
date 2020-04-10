@@ -13,9 +13,48 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.staticfiles.storage import ManifestStaticFilesStorage
+from six.moves.urllib.parse import (
+    unquote, urlsplit, urlunsplit,
+)
+
 
 class DjsManifestStaticFilesStorage(ManifestStaticFilesStorage):
     manifest_strict = False
+
+    def hashed_name(self, name, content=None, filename=None):
+        # `filename` is the name of file to hash if `content` isn't given.
+        # `name` is the base name to construct the new hashed filename from.
+        parsed_name = urlsplit(unquote(name))
+        clean_name = parsed_name.path.strip()
+        if filename:
+            filename = urlsplit(unquote(filename)).path.strip()
+        filename = filename or clean_name
+        opened = False
+        if content is None:
+            try:
+                content = self.open(filename)
+            except IOError:
+                # Handle directory paths and fragments
+                return name
+            opened = True
+        try:
+            file_hash = self.file_hash(clean_name, content)
+        finally:
+            if opened:
+                content.close()
+        path, filename = os.path.split(clean_name)
+        root, ext = os.path.splitext(filename)
+        if file_hash is not None:
+            file_hash = ".%s" % file_hash
+        hashed_name = os.path.join(path, "%s%s%s" %
+                                   (root, file_hash, ext))
+        unparsed_name = list(parsed_name)
+        unparsed_name[2] = hashed_name
+        # Special casing for a @font-face hack, like url(myfont.eot?#iefix")
+        # http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax
+        if '?#' in name and not unparsed_name[3]:
+            unparsed_name[2] += '?'
+        return urlunsplit(unparsed_name)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -183,7 +222,7 @@ STATICFILES_DIRS = [
     os.path.join(REACT_APP_DIR, 'build', 'static'),
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 
 LOCALE_PATHS = (
