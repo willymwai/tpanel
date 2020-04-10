@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from django.utils.translation import ugettext_lazy as _
+django.contrib.staticfiles.storage.ManifestStaticFilesStorage
+
+class DjsManifestStaticFilesStorage(ManifestStaticFilesStorage):
+    manifest_strict = False
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -170,7 +174,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-ManifestStaticFilesStorage.manifest_strict = False
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
 REACT_APP_DIR = os.path.join(BASE_DIR, 'client')
