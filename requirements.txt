@@ -66,3 +66,4 @@ zope.interface==4.5.0
 validators==0.14.2
 django-cors-headers==3.2.1
 gunicorn==19.6.0
+whitenoise==5.0.1
