@@ -28,8 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -116,19 +117,19 @@ WSGI_APPLICATION = 'CyberCP.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cyberpanel',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': '127.0.0.1',
-        'PORT':'3307'
+        'NAME': os.environ.get('default_db_name', 'cyberpanel'),
+        'USER': os.environ.get('default_db_user', 'root'),
+        'PASSWORD': os.environ.get('default_db_password', '1234'),
+        'HOST': os.environ.get('default_db_host', '127.0.0.1'),
+        'PORT':os.environ.get('default_db_port', '3307')
     },
     'rootdb': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.environ.get('root_db_name', 'mysql'),
+        'USER': os.environ.get('root_db_user', 'root'),
+        'PASSWORD': os.environ.get('root_db_password', '1234'),
+        'HOST': os.environ.get('root_db_host', '127.0.0.1'),
+        'PORT': os.environ.get('root_db_port', '3307')
     },
 }
 
