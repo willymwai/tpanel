@@ -170,6 +170,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+ManifestStaticFilesStorage.manifest_strict = False
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
 REACT_APP_DIR = os.path.join(BASE_DIR, 'client')
