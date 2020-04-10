@@ -10,6 +10,7 @@ FROM python:3.6
 WORKDIR /usr/tpanel/
 COPY --from=client /usr/client/build/ ./client/build/
 ENV PYTHONUNBUFFERED 1
+RUN apt-get update
 RUN apt-get install python-gpgme
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
