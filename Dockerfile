@@ -15,6 +15,8 @@ RUN apt-get install libgpgme-dev -y
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 COPY . ./
+RUN mkdir /usr/local/CyberCP
+COPY /usr/local/ /usr/local/CyberCP/
 
 
 RUN python manage.py collectstatic --noinput
