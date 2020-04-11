@@ -7,16 +7,23 @@ import {
     faTh, faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {linkItemOnClick} from "../functions/componentFunctions";
+import {serverBaseUrl, clientBaseUrl} from "../functions/baseUrls";
 
 export default class MainMenu extends Component {
 
-    usernameDropDown(label, icon) {
-        return <a className="dropdown-item main-menu-dropdown-item" href="#">
+    usernameDropDown(label, icon, key) {
+        return <a className="dropdown-item main-menu-dropdown-item" href="#" key={key}>
             <div className="mt-2 mb-2">
                 <FontAwesomeIcon icon={icon}/>
                 <span className="ml-1">{label}</span>
             </div>
         </a>
+    }
+
+    handleLogout(e) {
+        e.preventDefault();
+        linkItemOnClick(e, '/login', 'soft', this.props, clientBaseUrl());
     }
 
     render() {
@@ -32,8 +39,8 @@ export default class MainMenu extends Component {
             {label: 'Reset Page Settings', icon: faSync}
         ]
 
-        let username_dropdown = username_dropdown_items.map((item) => {
-            return this.usernameDropDown(item.label, item.icon);
+        let username_dropdown = username_dropdown_items.map((item, key) => {
+            return this.usernameDropDown(item.label, item.icon, key);
         })
 
         return (
@@ -63,7 +70,7 @@ export default class MainMenu extends Component {
                                    role="button"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <FontAwesomeIcon icon={faUser} color="#fff"/>
-                                    <span className="menu-labels ml-sm-1">username</span>
+                                    <span className="menu-labels ml-sm-1">{localStorage.username}</span>
                                 </a>
                                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {username_dropdown}
@@ -77,7 +84,8 @@ export default class MainMenu extends Component {
                             </li>
                             <li className="nav-item active">
                                 <a className="nav-link ml-1" href="#" tabIndex="-1"
-                                   aria-disabled="true">
+                                   aria-disabled="true"
+                                   onClick={(e) => this.handleLogout(e)}>
                                     <FontAwesomeIcon icon={faSignOutAlt} color="#fff"/>
                                     <span className="menu-labels ml-sm-1">LOGOUT</span>
                                 </a>

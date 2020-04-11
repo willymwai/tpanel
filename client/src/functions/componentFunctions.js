@@ -43,4 +43,22 @@ module.exports = {
         });
         return payload;
     },
+    getUrlData: function (data_url, dataByUrl) {
+        return dataByUrl[
+            data_url
+            ] || {
+            didInvalidate: false,
+            isFetching: true,
+            items: [],
+            lastUpdated: ''
+        }
+    },
+    linkItemOnClick: function (e, route, type, props, baseUrl) {
+        e.preventDefault();
+        if (type === 'soft_link') {
+            props.history.push(baseUrl + route);
+        } else {
+            window.open(baseUrl + route, "_self");
+        }
+    }
 }

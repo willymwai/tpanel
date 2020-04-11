@@ -3,18 +3,83 @@ import cardCategories from "./cardCategories";
 import "./icons-map.css";
 import {faMinus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+import {getUrlData} from "../functions/componentFunctions";
+import {
+    setSessionVariable,
+    fetchDataIfNeeded
+} from '../actions/actions';
+import {serverBaseUrl} from "../functions/baseUrls";
 
-export default class Home extends Component {
+class Home extends Component {
 
-    categoryCard(title, items) {
-        let card_items = items.map(function (item) {
-            return <div className="col-md-4 mt-3">
+    constructor(props) {
+        super(props);
+        this.state = {
+
+        }
+    }
+
+    componentDidMount() {
+        this.fetchUrlData(
+            'website_list_url',
+            '/cloudAPI/?controller=fetchWebsites',
+            'POST',
+            {
+                controller: "fetchWebsites",
+                serverUserName: localStorage.username,
+                page: 1,
+                recordsToShow: 10
+            }
+        );
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let prev_website_list_fetching = (prevProps['website_list_data'] || {})['isFetching'];
+        let website_list_fetching = (this.props['website_list_data'] || {})['isFetching'];
+        if (prev_website_list_fetching !== website_list_fetching) {
+            const {website_list_data} = this.props;
+            let website_list = website_list_data['items'];
+            if (!website_list_data['isFetching']) {
+                website_list = JSON.parse(website_list['data'] || "[]");
+            }
+            if (website_list.length > 0){
+               this.fetchWebsiteData(website_list[0]['domain']);
+            }
+        }
+    }
+
+    fetchUrlData = (var_name, url, method='GET', payload={}) => {
+        const {dispatch} = this.props;
+        url = serverBaseUrl() + url;
+        this.props.dispatch(setSessionVariable(var_name, url));
+        dispatch(fetchDataIfNeeded(url, method, payload));
+    };
+
+    fetchWebsiteData = (domain) => {
+        this.fetchUrlData(
+            'primary_website_url',
+            '/cloudAPI/?controller=fetchWebsiteData',
+            'POST',
+            {
+                controller: "fetchWebsiteData",
+                serverUserName: localStorage.username,
+                domainName: domain
+            }
+        );
+    }
+
+    categoryCard(title, items, key) {
+        let card_items = items.map(function (item, key) {
+            return <div className="col-md-4 mt-3" key={key}>
                 <a href="#" className={`category-item-image-wrapper ${item.icon}`}/>
                 <a href="#" className="ml-2">{item.title}</a>
             </div>
         });
         return (
-            <div className="card mt-3 category-card">
+            <div className="card mt-3 category-card" key={key}>
                 <div className="card-header bg-dark-blue-1 text-white">
                     {title}
                     <a href="#">
@@ -31,13 +96,21 @@ export default class Home extends Component {
     }
 
     infoSideCard(title, side_card_categories, side_card_data) {
-        let card_items = side_card_categories.map(function (item) {
-            return <div className="row border-bottom p-2">
+        let card_items = side_card_categories.map(function (item, key) {
+            let statistics_value = '';
+            if (typeof item.key === "object") {
+                let used = side_card_data[item.key['used']] || 0;
+                let allowed = side_card_data[item.key['allowed']] || 0;
+                statistics_value = `${used} / ${allowed}`;
+            } else {
+                statistics_value = side_card_data[item.key];
+            }
+            return <div className="row border-bottom p-2" key={key}>
                 <div className="col-md-12">
                     <span className="side-card-label">{item.title}</span>
                 </div>
                 <div className="col-md-12 mt-1">
-                    <span>{side_card_data[item.key]}</span>
+                    <span>{statistics_value}</span>
                 </div>
             </div>
         });
@@ -56,16 +129,33 @@ export default class Home extends Component {
     render() {
         let card_categories = cardCategories.cardCategories();
         let side_card_categories = cardCategories.sideCardCategories();
-        let categories_cards = card_categories.map((category) => {
-            return this.categoryCard(category.title, category.items)
+        let categories_cards = card_categories.map((category, key) => {
+            return this.categoryCard(category.title, category.items, key)
         });
-        let side_card_data = {
-            current_user: 'username',
-            primary_domain: 'https://domain.com',
-            shared_ip_address: '192.168.0.1',
-            home_directory: '/home/domain',
-            last_login_ip: '192.168.1.1'
+        const {website_list_data, primary_website_data} = this.props;
+        let website_list = website_list_data['items'];
+        let primary_website_data_ = primary_website_data['items'];
+        if (primary_website_data_ === []) {
+            primary_website_data_ = {};
         }
+        if (!website_list_data['isFetching']) {
+            website_list = JSON.parse(website_list['data'] || "[]");
+        }
+        let primary_domain = '';
+        let primary_domain_ip = '';
+        if (website_list.length > 0) {
+            let primary_domain_object = website_list[0];
+            primary_domain = primary_domain_object['domain'];
+            primary_domain_ip = primary_domain_object['ipAddress'];
+        }
+        let side_card_data = {
+            current_user: localStorage.username,
+            primary_domain: primary_domain,
+            shared_ip_address: primary_domain_ip,
+            home_directory: `/home/${primary_domain}/public_html`,
+            last_login_ip: '192.168.1.1',
+        };
+        side_card_data = Object.assign({}, side_card_data, primary_website_data_);
         let general_info_card = this.infoSideCard(
             'GENERAL INFORMATION', side_card_categories['general_information'], side_card_data
         );
@@ -89,3 +179,29 @@ export default class Home extends Component {
         )
     }
 }
+
+Home.propTypes = {
+    sessionVariables: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired,
+    website_list_data: PropTypes.object.isRequired,
+    primary_website_data: PropTypes.object.isRequired
+};
+
+function mapStateToProps(state) {
+    function retrieveUrlData(url_var_name) {
+        let url = sessionVariables[url_var_name] || '';
+        return getUrlData(url, dataByUrl);
+    }
+
+    const {sessionVariables, dataByUrl} = state;
+    const website_list_data = retrieveUrlData('website_list_url', dataByUrl);
+    const primary_website_data = retrieveUrlData('primary_website_url', dataByUrl);
+
+    return {
+        sessionVariables,
+        website_list_data,
+        primary_website_data
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Home))

@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch';
+import {getCookie} from "../functions/componentFunctions";
 
 export const REQUEST_DATA = 'REQUEST_DATA';
 export const RECEIVE_DATA = 'RECEIVE_DATA';
@@ -36,16 +37,31 @@ function receiveData(endpoint, json) {
     }
 }
 
-function fetchData(endpoint) {
+function fetchData(endpoint, method = 'GET', payload = {}) {
     return dispatch => {
         dispatch(requestData(endpoint));
-        return fetch(endpoint, {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.token
-            }
-        })
-            .then(response => response.json())
-            .then(json => dispatch(receiveData(endpoint, json)))
+        if (method === 'GET') {
+            return fetch(endpoint, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.token
+                }
+            })
+                .then(response => response.json())
+                .then(json => dispatch(receiveData(endpoint, json)))
+        } else {
+            let csrftoken = getCookie('csrftoken');
+            return fetch(endpoint, {
+                credentials: 'include',
+                method: method,
+                body: JSON.stringify(payload),
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Authorization': 'Basic ' + localStorage.token
+                },
+            })
+                .then(response => response.json())
+                .then(json => dispatch(receiveData(endpoint, json)))
+        }
     }
 }
 
@@ -60,10 +76,10 @@ function shouldFetchData(state, endpoint) {
     }
 }
 
-export function fetchDataIfNeeded(endpoint) {
+export function fetchDataIfNeeded(endpoint, method='GET', payload={}) {
     return (dispatch, getState) => {
         if (shouldFetchData(getState(), endpoint)) {
-            return dispatch(fetchData(endpoint))
+            return dispatch(fetchData(endpoint, method, payload))
         }
     }
 }

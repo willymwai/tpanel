@@ -5,5 +5,8 @@ module.exports = {
         } else {
             return '';
         }
+    },
+    clientBaseUrl: function () {
+        return '/app';
     }
 };

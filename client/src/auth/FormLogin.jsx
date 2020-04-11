@@ -4,7 +4,7 @@ import {faUser, faLock} from "@fortawesome/free-solid-svg-icons";
 import NameLogo from "../media/name-logo.svg";
 import Logo from "../media/logo.svg";
 import {postAPIRequest} from "../functions/apiRequests";
-import {serverBaseUrl} from "../functions/baseUrls";
+import {serverBaseUrl, clientBaseUrl} from "../functions/baseUrls";
 import {getCookie, extractResponseError, formDataToPayload} from "../functions/componentFunctions";
 import FormFeedback from "../components/FormFeedback";
 import $ from "jquery";
@@ -37,7 +37,9 @@ export default class FormLogin extends Component {
         postAPIRequest(
             login_url,
             () => {
-                window.open(`${serverBaseUrl()}/base`, "_self");
+                localStorage.username = payload['username'];
+                localStorage.token = btoa(`${payload['username']}:${payload['password']}`);
+                this.props.history.push(`${clientBaseUrl()}/`);
             },
             (results) => {
                 let error_message = extractResponseError(results);
