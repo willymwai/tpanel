@@ -18,7 +18,9 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            primary_domain: {}
+            primary_domain: {},
+            search: null,
+            categories_match: []
         }
     }
 
@@ -144,8 +146,37 @@ class Home extends Component {
         )
     }
 
+    handleFilterCategories(search) {
+        let card_categories = cardCategories.cardCategories();
+        let categories_match = [];
+        search = search.toLowerCase();
+        card_categories.forEach(function (category) {
+            let items_match = [];
+            let items = category['items'];
+            items.forEach(function (item) {
+                if (item['title'].toLowerCase().includes(search)) {
+                    items_match.push(item);
+                }
+            });
+            if (items_match.length > 0) {
+                let category_match = {
+                    title: category['title'],
+                    items: items_match
+                }
+                categories_match.push(category_match);
+            }
+        });
+        this.setState({
+            categories_match: categories_match,
+            search: search
+        });
+    }
+
     render() {
         let card_categories = cardCategories.cardCategories();
+        if (this.state.search) {
+            card_categories = this.state.categories_match;
+        }
         let side_card_categories = cardCategories.sideCardCategories();
         let categories_cards = card_categories.map((category, key) => {
             return this.categoryCard(category.title, category.items, key)
@@ -186,6 +217,7 @@ class Home extends Component {
                 <div className="col-md-9 mt-3">
                     <input type="text" className="form-control"
                            placeholder="Find functions quickly by typing here"
+                           onKeyUp={(e) => this.handleFilterCategories(e.target.value)}
                     />
                     {categories_cards}
                 </div>
