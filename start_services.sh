@@ -2,6 +2,7 @@
 
 mkdir /usr/local/CyberCP
 cp -r /usr/local/bin/ /usr/local/CyberCP/bin/
+cp -r /usr/tpanel/ /usr/local/CyberCP/
 touch /etc/redhat-release
 
 python manage.py migrate
