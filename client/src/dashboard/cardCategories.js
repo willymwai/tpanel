@@ -3,22 +3,55 @@ module.exports = {
         return [
             {
                 title: 'FILES', items: [
-                    {title: 'File manager', icon: 'icon-file_manager'},
-                    {title: 'Images', icon: 'icon-images'},
-                    {title: 'Directory Privacy', icon: 'icon-directory_privacy'},
-                    {title: 'Disk Usage', icon: 'icon-disk_usage'},
+                    {
+                        title: 'File manager', icon: 'icon-file_manager',
+                        path: '/filemanager/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Images', icon: 'icon-images',
+                        path: '/filemanager', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Directory Privacy', icon: 'icon-directory_privacy',
+                        path: '/filemanager', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Disk Usage', icon: 'icon-disk_usage',
+                        path: '/filemanager', type: 'hard', target: '_blank'
+                    },
                     {title: 'Web Disk', icon: 'icon-web_disk'},
-                    {title: 'FTP Accounts', icon: 'icon-ftp_accounts'},
+                    {
+                        title: 'FTP Accounts', icon: 'icon-ftp_accounts',
+                        path: '/ftp/', type: 'hard', target: '_blank'
+                    },
                     {title: 'FTP Connections', icon: 'icon-ftp_connections'},
-                    {title: 'Backup', icon: 'icon-backup'},
-                    {title: 'Backup Wizard', icon: 'icon-backup_wizard'},
-                    {title: 'Git Version Control', icon: 'icon-version_control'},
+                    {
+                        title: 'Backup', icon: 'icon-backup',
+                        path: '/IncrementalBackups/createBackup', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Backup Wizard', icon: 'icon-backup_wizard',
+                        path: '/backup/backupSite', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Git Version Control', icon: 'icon-version_control',
+                        path: '/websites/{primary_domain}/manageGIT', type: 'hard', target: '_blank'
+                    },
                 ]
             }, {
                 title: 'DATABASES', items: [
-                    {title: 'phpMyAdmin', icon: 'icon-php_my_admin'},
-                    {title: 'MySQL Databases', icon: 'icon-mysql_databases'},
-                    {title: 'MySQL Database Wizard', icon: 'icon-mysql_database_wizard'},
+                    {
+                        title: 'phpMyAdmin', icon: 'icon-php_my_admin',
+                        path: '/phpmyadmin/index.php', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'MySQL Databases', icon: 'icon-mysql_databases',
+                        path: '/dataBases/', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'MySQL Database Wizard', icon: 'icon-mysql_database_wizard',
+                        path: '/dataBases/createDatabase', type: 'hard', target: '_blank'
+                    },
                     {title: 'Remote MySQL', icon: 'icon-remote_mysql'},
                     {title: 'PostgreSQL Databases', icon: 'icon-postgresql_databases'},
                     {title: 'PostreSQL Database Wizard', icon: 'icon-postgresql_database_wizard'},
@@ -27,17 +60,41 @@ module.exports = {
             }, {
                 title: 'DOMAINS', items: [
                     {title: 'Site Publisher', icon: 'icon-site_publisher'},
-                    {title: 'Domains', icon: 'icon-domains'},
-                    {title: 'Addon Domains', icon: 'icon-addon_domains'},
-                    {title: 'Subdomains', icon: 'icon-subdomains'},
-                    {title: 'Aliases', icon: 'icon-aliases'},
-                    {title: 'Redirects', icon: 'icon-redirects'},
-                    {title: 'Zone Editor', icon: 'icon-zone_editor'}
+                    {
+                        title: 'Domains', icon: 'icon-domains',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Addon Domains', icon: 'icon-addon_domains',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Subdomains', icon: 'icon-subdomains',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Aliases', icon: 'icon-aliases',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Redirects', icon: 'icon-redirects',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Zone Editor', icon: 'icon-zone_editor',
+                        path: '/dns/', type: 'hard', target: '_blank'
+                    }
                 ]
             }, {
                 title: 'EMAILS', items: [
-                    {title: 'Email Accounts', icon: 'icon-email_accounts'},
-                    {title: 'Forwarders', icon: 'icon-forwarders'},
+                    {
+                        title: 'Email Accounts', icon: 'icon-email_accounts',
+                        path: '/email/', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Forwarders', icon: 'icon-forwarders',
+                        path: '/email/emailForwarding', type: 'hard', target: '_blank'
+                    },
                     {title: 'Email Routing', icon: 'icon-email_routing'},
                     {title: 'Autoresponders', icon: 'icon-autoresponders'},
                     {title: 'Default Address', icon: 'icon-default_address'},
@@ -68,14 +125,23 @@ module.exports = {
                 ]
             }, {
                 title: 'SECURITY', items: [
-                    {title: 'SSH Access', icon: 'icon-ssh_access'},
+                    {
+                        title: 'SSH Access', icon: 'icon-ssh_access',
+                        path: '/websites/{primary_domain}/sshAccess', type: 'hard', target: '_blank'
+                    },
                     {title: 'IP Blocker', icon: 'icon-ip_blocker'},
-                    {title: 'SSL/TLS', icon: 'icon-ssl_tls'},
+                    {
+                        title: 'SSL/TLS', icon: 'icon-ssl_tls',
+                        path: '/manageSSL/manageSSL', type: 'hard', target: '_blank'
+                    },
                     {title: 'Manage API Tokens', icon: 'icon-api_tokens'},
                     {title: 'Hotlink Protection', icon: 'icon-hotlink_protection'},
                     {title: 'Leech Protection', icon: 'icon-leech_protection'},
                     {title: 'ModSecurity', icon: 'icon-mod_security'},
-                    {title: 'SSL/TLS Status', icon: 'icon-tls_status'},
+                    {
+                        title: 'SSL/TLS Status', icon: 'icon-tls_status',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
                     {title: 'Two-Factor Authentication', icon: 'icon-two_factor_authentication'},
                 ]
             }, {
@@ -83,14 +149,26 @@ module.exports = {
                     {title: 'Cloudflare', icon: 'icon-cloudflare'},
                     {title: 'PHP PEARL Packages', icon: 'icon-php_pear_packages'},
                     {title: 'Perl Modules', icon: 'icon-perl_modules'},
-                    {title: 'Site Software', icon: 'icon-site_software'},
+                    {
+                        title: 'Site Software', icon: 'icon-site_software',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
                     {title: 'Optimize Website', icon: 'icon-optimize_website'},
-                    {title: 'MultiPHP Manager', icon: 'icon-multiphp_manager'},
-                    {title: 'MultiPHP INI Editor', icon: 'icon-multiphp_ini_editor'},
+                    {
+                        title: 'MultiPHP Manager', icon: 'icon-multiphp_manager',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'MultiPHP INI Editor', icon: 'icon-multiphp_ini_editor',
+                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                    },
                 ]
             }, {
                 title: 'ADVANCED', items: [
-                    {title: 'Cron Jobs', icon: 'icon-cron_jobs'},
+                    {
+                        title: 'Cron Jobs', icon: 'icon-cron_jobs',
+                        path: '/websites/listCron', type: 'hard', target: '_blank'
+                    },
                     {title: 'Track DNS', icon: 'icon-track_dns'},
                     {title: 'Indexes', icon: 'icon-indexes'},
                     {title: 'Error Pages', icon: 'icon-error_pages'},
@@ -99,11 +177,20 @@ module.exports = {
                 ]
             }, {
                 title: 'PREFERENCES', items: [
-                    {title: 'Password & Security', icon: 'icon-change_password'},
+                    {
+                        title: 'Password & Security', icon: 'icon-change_password',
+                        path: '/users/modifyUsers', type: 'hard', target: '_blank'
+                    },
                     {title: 'Change Language', icon: 'icon-change_language'},
                     {title: 'Change Style', icon: 'icon-change_style'},
-                    {title: 'Contact Information', icon: 'icon-contact_information'},
-                    {title: 'User Manager', icon: 'icon-user_manager'},
+                    {
+                        title: 'Contact Information', icon: 'icon-contact_information',
+                        path: '/users/modifyUsers', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'User Manager', icon: 'icon-user_manager',
+                        path: '/users/modifyUsers', type: 'hard', target: '_blank'
+                    },
                 ]
             }
         ]

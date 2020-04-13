@@ -6,19 +6,19 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getUrlData} from "../functions/componentFunctions";
+import {getUrlData, linkItemOnClick} from "../functions/componentFunctions";
 import {
     setSessionVariable,
     fetchDataIfNeeded
 } from '../actions/actions';
-import {serverBaseUrl} from "../functions/baseUrls";
+import {serverBaseUrl, clientBaseUrl} from "../functions/baseUrls";
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
+            primary_domain: {}
         }
     }
 
@@ -45,13 +45,16 @@ class Home extends Component {
             if (!website_list_data['isFetching']) {
                 website_list = JSON.parse(website_list['data'] || "[]");
             }
-            if (website_list.length > 0){
-               this.fetchWebsiteData(website_list[0]['domain']);
+            if (website_list.length > 0) {
+                this.fetchWebsiteData(website_list[0]['domain']);
+                this.setState({
+                   primary_domain: website_list[0]
+                });
             }
         }
     }
 
-    fetchUrlData = (var_name, url, method='GET', payload={}) => {
+    fetchUrlData = (var_name, url, method = 'GET', payload = {}) => {
         const {dispatch} = this.props;
         url = serverBaseUrl() + url;
         this.props.dispatch(setSessionVariable(var_name, url));
@@ -71,11 +74,26 @@ class Home extends Component {
         );
     }
 
+    handleClickCategory(e, item) {
+        e.preventDefault();
+        let baseUrl = clientBaseUrl();
+        let path = item['path'].replace('{primary_domain}', this.state.primary_domain['domain']);
+        if (item['type'] === 'hard') {
+            baseUrl = serverBaseUrl();
+        }
+        linkItemOnClick(e, path, item['type'], this.props, baseUrl, item['target']);
+    }
+
     categoryCard(title, items, key) {
-        let card_items = items.map(function (item, key) {
+        let card_items = items.map((item, key) => {
             return <div className="col-md-4 mt-3" key={key}>
-                <a href="#" className={`category-item-image-wrapper ${item.icon}`}/>
-                <a href="#" className="ml-2">{item.title}</a>
+                <a href="#" className={`category-item-image-wrapper ${item.icon}`}
+                   onClick={(e) => this.handleClickCategory(e, item)}
+                />
+                <a href="#" className="ml-2"
+                   onClick={(e) => this.handleClickCategory(e, item)}>
+                    {item.title}
+                </a>
             </div>
         });
         return (

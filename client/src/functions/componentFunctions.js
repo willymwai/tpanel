@@ -53,12 +53,12 @@ module.exports = {
             lastUpdated: ''
         }
     },
-    linkItemOnClick: function (e, route, type, props, baseUrl) {
+    linkItemOnClick: function (e, route, type, props, baseUrl, target='_self') {
         e.preventDefault();
         if (type === 'soft_link') {
             props.history.push(baseUrl + route);
         } else {
-            window.open(baseUrl + route, "_self");
+            window.open(baseUrl + route, target);
         }
     }
 }
