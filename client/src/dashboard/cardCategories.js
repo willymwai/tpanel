@@ -74,7 +74,7 @@ module.exports = {
                     },
                     {
                         title: 'Aliases', icon: 'icon-aliases',
-                        path: '/websites/{primary_domain}', type: 'hard', target: '_blank'
+                        path: '/websites/{primary_domain}/domainAlias', type: 'hard', target: '_blank'
                     },
                     {
                         title: 'Redirects', icon: 'icon-redirects',
@@ -190,6 +190,29 @@ module.exports = {
                     {
                         title: 'User Manager', icon: 'icon-user_manager',
                         path: '/users/modifyUsers', type: 'hard', target: '_blank'
+                    },
+                ]
+            }, {
+                title: 'APPLICATION INSTALLER', items: [
+                    {
+                        title: 'Wordpress With LSCache', icon: null, image: require('../media/wordpress.png'),
+                        path: '/websites/{primary_domain}/wordpressinstall', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Joomla', icon: null, image: require('../media/joomla-logo.png'),
+                        path: '/websites/{primary_domain}/joomlainstall', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Git', icon: null, image: require('../media/git-logo.png'),
+                        path: '/websites/{primary_domain}/manageGIT', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Prestashop', icon: null, image: require('../media/prestashop.png'),
+                        path: '/websites/{primary_domain}/installPrestaShop', type: 'hard', target: '_blank'
+                    },
+                    {
+                        title: 'Magento', icon: null, image: require('../media/magento.png'),
+                        path: '/websites/{primary_domain}/installMagento', type: 'hard', target: '_blank'
                     },
                 ]
             }

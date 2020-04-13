@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import cardCategories from "./cardCategories";
 import "./icons-map.css";
-import {faMinus} from "@fortawesome/free-solid-svg-icons";
+import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
@@ -12,6 +12,8 @@ import {
     fetchDataIfNeeded
 } from '../actions/actions';
 import {serverBaseUrl, clientBaseUrl} from "../functions/baseUrls";
+import ComponentLoadingIndicator from "../components/ComponentLoadingIndicator";
+import {UncontrolledPopover, PopoverHeader, PopoverBody} from 'reactstrap';
 
 class Home extends Component {
 
@@ -20,11 +22,16 @@ class Home extends Component {
         this.state = {
             primary_domain: {},
             search: null,
-            categories_match: []
+            categories_match: [],
+            collapsed_categories: []
         }
     }
 
     componentDidMount() {
+        let collapsed_categories = JSON.parse(localStorage.collapsed_categories || '[]');
+        this.setState({
+            collapsed_categories: collapsed_categories
+        });
         this.fetchUrlData(
             'website_list_url',
             '/cloudAPI/?controller=fetchWebsites',
@@ -50,7 +57,7 @@ class Home extends Component {
             if (website_list.length > 0) {
                 this.fetchWebsiteData(website_list[0]['domain']);
                 this.setState({
-                   primary_domain: website_list[0]
+                    primary_domain: website_list[0]
                 });
             }
         }
@@ -78,39 +85,90 @@ class Home extends Component {
 
     handleClickCategory(e, item) {
         e.preventDefault();
-        let baseUrl = clientBaseUrl();
-        let path = item['path'].replace('{primary_domain}', this.state.primary_domain['domain']);
-        if (item['type'] === 'hard') {
-            baseUrl = serverBaseUrl();
+        if (item['path']) {
+            let baseUrl = clientBaseUrl();
+            let path = item['path'].replace('{primary_domain}', this.state.primary_domain['domain']);
+            if (item['type'] === 'hard') {
+                baseUrl = serverBaseUrl();
+            }
+            linkItemOnClick(e, path, item['type'], this.props, baseUrl, item['target']);
         }
-        linkItemOnClick(e, path, item['type'], this.props, baseUrl, item['target']);
+    }
+
+    handleCollapseCategory(e, title) {
+        e.preventDefault();
+        let collapsed_categories = this.state.collapsed_categories;
+        if (collapsed_categories.includes(title)) {
+            collapsed_categories = collapsed_categories.filter(function (category) {
+                return category !== title;
+            });
+        } else {
+            collapsed_categories.push(title);
+        }
+        localStorage.collapsed_categories = JSON.stringify(collapsed_categories);
+        this.setState({
+            collapsed_categories: collapsed_categories
+        });
     }
 
     categoryCard(title, items, key) {
+        let collapsed_categories = this.state.collapsed_categories;
+
         let card_items = items.map((item, key) => {
-            return <div className="col-md-4 mt-3" key={key}>
-                <a href="#" className={`category-item-image-wrapper ${item.icon}`}
+            let popover_key = item.title.replace(/\s+/g, '_');
+            popover_key = `${popover_key}_popover_open`;
+            let popover_open = this.state[popover_key] || false;
+            let icon_object = <a href="#" className={`category-item-image-wrapper ${item.icon}`}
+                                 onClick={(e) => this.handleClickCategory(e, item)}
+            />
+            if (item.image) {
+                icon_object = <img src={item.image} alt="logo"/>
+            }
+            let item_link = [
+                <a href="#"
                    onClick={(e) => this.handleClickCategory(e, item)}
-                />
-                <a href="#" className="ml-2"
-                   onClick={(e) => this.handleClickCategory(e, item)}>
+                   className="ml-2"
+                   id={popover_key}
+                   title="Feature coming soon!"
+                   data-content="This feature is still under construction."
+                >
+                    {item.title}
+                </a>,
+                <UncontrolledPopover trigger="focus" placement="bottom" target={popover_key}>
+                    <PopoverHeader>Feature coming soon!</PopoverHeader>
+                    <PopoverBody>This feature is still under construction.</PopoverBody>
+                </UncontrolledPopover>
+            ];
+            if (item.path) {
+                item_link = <a href="#" className="ml-2"
+                               onClick={(e) => this.handleClickCategory(e, item)}>
                     {item.title}
                 </a>
+            }
+            return <div className="col-md-4 mt-3" key={key}>
+                {icon_object}
+                {item_link}
             </div>
         });
+        let card_body = '';
+        let collapse_icon = faPlus;
+        if (!collapsed_categories.includes(title)) {
+            collapse_icon = faMinus;
+            card_body = <div className="card-body">
+                <div className="row">
+                    {card_items}
+                </div>
+            </div>
+        }
         return (
             <div className="card mt-3 category-card" key={key}>
                 <div className="card-header bg-dark-blue-1 text-white">
                     {title}
-                    <a href="#">
-                        <FontAwesomeIcon icon={faMinus} className="float-right" color="#fff"/>
+                    <a href="#" onClick={(e) => this.handleCollapseCategory(e, title)}>
+                        <FontAwesomeIcon icon={collapse_icon} className="float-right" color="#fff"/>
                     </a>
                 </div>
-                <div className="card-body">
-                    <div className="row">
-                        {card_items}
-                    </div>
-                </div>
+                {card_body}
             </div>
         )
     }
@@ -182,6 +240,9 @@ class Home extends Component {
             return this.categoryCard(category.title, category.items, key)
         });
         const {website_list_data, primary_website_data} = this.props;
+        if (website_list_data['isFetching']) {
+            return <ComponentLoadingIndicator/>
+        }
         let website_list = website_list_data['items'];
         let primary_website_data_ = primary_website_data['items'];
         if (primary_website_data_ === []) {
