@@ -7,10 +7,20 @@ import {
     faTh, faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {linkItemOnClick} from "../functions/componentFunctions";
-import {clientBaseUrl} from "../functions/baseUrls";
+import {getCookie, linkItemOnClick} from "../functions/componentFunctions";
+import {clientBaseUrl, serverBaseUrl} from "../functions/baseUrls";
+import {postAPIRequest, getAPIRequest} from "../functions/apiRequests";
+import {withRouter} from 'react-router-dom';
 
-export default class MainMenu extends Component {
+class MainMenu extends Component {
+
+    componentDidMount() {
+        if (!localStorage.token || !localStorage.username) {
+            this.props.history.push(clientBaseUrl() + '/login');
+        } else {
+            this.getWebsites();
+        }
+    }
 
     usernameDropDown(label, icon, key) {
         return <a className="dropdown-item main-menu-dropdown-item" href="#" key={key}>
@@ -23,7 +33,43 @@ export default class MainMenu extends Component {
 
     handleLogout(e) {
         e.preventDefault();
-        linkItemOnClick(e, '/login', 'soft', this.props, clientBaseUrl());
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+        let logout_url = serverBaseUrl() + '/logout';
+        let csrftoken = getCookie('csrftoken');
+        getAPIRequest(
+            logout_url,
+            () => {
+                this.props.history.push(clientBaseUrl() + '/login');
+            },
+            () => {
+                this.props.history.push(clientBaseUrl() + '/login');
+            },
+            {
+                'X-CSRFToken': csrftoken
+            }
+        )
+    }
+
+    getWebsites() {
+        let websites_url = serverBaseUrl() + '/websites/fetchWebsitesList';
+        let csrftoken = getCookie('csrftoken');
+        postAPIRequest(
+            websites_url,
+            () => {
+
+            },
+            () => {
+                this.props.history.push(clientBaseUrl() + '/login');
+            },
+            {
+                page: 1,
+                recordsToShow: 10
+            },
+            {
+                'X-CSRFToken': csrftoken
+            }
+        )
     }
 
     render() {
@@ -120,3 +166,5 @@ export default class MainMenu extends Component {
         )
     }
 }
+
+export default withRouter(MainMenu)

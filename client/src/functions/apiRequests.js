@@ -24,9 +24,13 @@ module.exports = {
             if (process.env.NODE_ENV === 'development' && error.status >= 500) {
                 errorCallback(error.statusText);
             } else {
-                error.json().then((body) => {
-                    errorCallback(body);
-                });
+                try {
+                    error.json().then((body) => {
+                        errorCallback(body);
+                    });
+                } catch (e) {
+                    errorCallback({});
+                }
             }
         });
     },
@@ -49,9 +53,13 @@ module.exports = {
             if (process.env.NODE_ENV === 'development' && error.status >= 500) {
                 errorCallback(error.statusText);
             } else {
-                error.json().then((body) => {
-                    errorCallback(body);
-                });
+                try {
+                    error.json().then((body) => {
+                        errorCallback(body);
+                    });
+                } catch (e) {
+                    errorCallback({});
+                }
             }
         });
     }
