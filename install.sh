@@ -36,7 +36,7 @@ else
   exit 1
 fi
 
-rm -f cyberpanel.sh install.tar.gz
-curl --silent -o cyberpanel.sh "https://cyberpanel.sh/?dl&${SERVER_OS}" 2>/dev/null
+#rm -f cyberpanel.sh install.tar.gz
+#curl --silent -o cyberpanel.sh "https://cyberpanel.sh/?dl&${SERVER_OS}" 2>/dev/null
 chmod +x cyberpanel.sh
 ./cyberpanel.sh "$@"

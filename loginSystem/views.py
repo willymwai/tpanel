@@ -132,7 +132,7 @@ def loadLoginPage(request):
         finaData = {"admin": admin, 'ramUsage': cpuRamDisk['ramUsage'], 'cpuUsage': cpuRamDisk['cpuUsage'],
                     'diskUsage': cpuRamDisk['diskUsage']}
 
-        return render(request, 'baseTemplate/homePage.html', finaData)
+        return render(request, 'index.html', finaData)
     except KeyError:
 
         numberOfAdministrator = Administrator.objects.count()
@@ -203,9 +203,9 @@ def loadLoginPage(request):
                                   bandwidth=1000, ftpAccounts=1000, dataBases=1000,
                                   emailAccounts=1000,allowedDomains=20)
             package.save()
-            return render(request, 'loginSystem/login.html', {})
+            return render(request, 'index.html', {})
         else:
-            return render(request, 'loginSystem/login.html', {})
+            return render(request, 'index.html', {})
 
 @ensure_csrf_cookie
 def logout(request):

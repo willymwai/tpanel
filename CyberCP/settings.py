@@ -12,6 +12,49 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.staticfiles.storage import ManifestStaticFilesStorage
+from six.moves.urllib.parse import (
+    unquote, urlsplit, urlunsplit,
+)
+
+
+class DjsManifestStaticFilesStorage(ManifestStaticFilesStorage):
+    manifest_strict = False
+
+    def hashed_name(self, name, content=None, filename=None):
+        # `filename` is the name of file to hash if `content` isn't given.
+        # `name` is the base name to construct the new hashed filename from.
+        parsed_name = urlsplit(unquote(name))
+        clean_name = parsed_name.path.strip()
+        if filename:
+            filename = urlsplit(unquote(filename)).path.strip()
+        filename = filename or clean_name
+        opened = False
+        if content is None:
+            try:
+                content = self.open(filename)
+            except IOError:
+                # Handle directory paths and fragments
+                return name
+            opened = True
+        try:
+            file_hash = self.file_hash(clean_name, content)
+        finally:
+            if opened:
+                content.close()
+        path, filename = os.path.split(clean_name)
+        root, ext = os.path.splitext(filename)
+        if file_hash is not None:
+            file_hash = ".%s" % file_hash
+        hashed_name = os.path.join(path, "%s%s%s" %
+                                   (root, file_hash, ext))
+        unparsed_name = list(parsed_name)
+        unparsed_name[2] = hashed_name
+        # Special casing for a @font-face hack, like url(myfont.eot?#iefix")
+        # http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax
+        if '?#' in name and not unparsed_name[3]:
+            unparsed_name[2] += '?'
+        return urlunsplit(unparsed_name)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +67,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xr%j*p!*$0d%(-(e%@-*hyoz4$f%y77coq0u)6pwmjg4)q&19f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+if DEBUG:
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -66,13 +113,17 @@ INSTALLED_APPS = [
     'containerization',
     'CLManager',
     'IncBackups',
-    'WebTerminal'
+    'WebTerminal',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,7 +138,7 @@ ROOT_URLCONF = 'CyberCP.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'client/build')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -110,19 +161,19 @@ WSGI_APPLICATION = 'CyberCP.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cyberpanel',
-        'USER': 'cyberpanel',
-        'PASSWORD': 'Bz9gF7Hr7X4RtD',
-        'HOST': '127.0.0.1',
-        'PORT':'3307'
+        'NAME': os.environ.get('default_db_name', 'cyberpanel'),
+        'USER': os.environ.get('default_db_user', 'root'),
+        'PASSWORD': os.environ.get('default_db_password', '1234'),
+        'HOST': os.environ.get('default_db_host', '127.0.0.1'),
+        'PORT':os.environ.get('default_db_port', '3307')
     },
     'rootdb': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'root',
-        'PASSWORD': 'sXm5VlRaAsXkDd',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': os.environ.get('root_db_name', 'mysql'),
+        'USER': os.environ.get('root_db_user', 'root'),
+        'PASSWORD': os.environ.get('root_db_password', '1234'),
+        'HOST': os.environ.get('root_db_host', '127.0.0.1'),
+        'PORT': os.environ.get('root_db_port', '3307')
     },
 }
 
@@ -163,8 +214,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
+REACT_APP_DIR = os.path.join(BASE_DIR, 'client')
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static/"),
+    os.path.join(REACT_APP_DIR, 'build', 'static'),
+]
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
 
 LOCALE_PATHS = (
