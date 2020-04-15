@@ -67,7 +67,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xr%j*p!*$0d%(-(e%@-*hyoz4$f%y77coq0u)6pwmjg4)q&19f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,25 +157,44 @@ WSGI_APPLICATION = 'CyberCP.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('default_db_name', 'cyberpanel'),
-        'USER': os.environ.get('default_db_user', 'cyberpanel'),
-        'PASSWORD': os.environ.get('default_db_password', 'Bz9gF7Hr7X4RtD'),
-        'HOST': os.environ.get('default_db_host', '127.0.0.1'),
-        'PORT':os.environ.get('default_db_port', '3307')
-    },
-    'rootdb': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('root_db_name', 'mysql'),
-        'USER': os.environ.get('root_db_user', 'root'),
-        'PASSWORD': os.environ.get('root_db_password', 'sXm5VlRaAsXkDd'),
-        'HOST': os.environ.get('root_db_host', '127.0.0.1'),
-        'PORT': os.environ.get('root_db_port', '')
-    },
-}
+if os.environ.get('default_db_name') or DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('default_db_name', 'cyberpanel'),
+            'USER': os.environ.get('default_db_user', 'root'),
+            'PASSWORD': os.environ.get('default_db_password', '1234'),
+            'HOST': os.environ.get('default_db_host', '127.0.0.1'),
+            'PORT':os.environ.get('default_db_port', '3307')
+        },
+        'rootdb': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('root_db_name', 'mysql'),
+            'USER': os.environ.get('root_db_user', 'root'),
+            'PASSWORD': os.environ.get('root_db_password', '1234'),
+            'HOST': os.environ.get('root_db_host', '127.0.0.1'),
+            'PORT': os.environ.get('root_db_port', '')
+        },
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'cyberpanel',
+            'USER': 'cyberpanel',
+            'PASSWORD': 'Bz9gF7Hr7X4RtD',
+            'HOST': '127.0.0.1',
+            'PORT': '3307'
+        },
+        'rootdb': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mysql',
+            'USER': 'root',
+            'PASSWORD': 'sXm5VlRaAsXkDd',
+            'HOST': 'localhost',
+            'PORT': '',
+        },
+    }
 
 DATABASE_ROUTERS = ['backup.backupRouter.backupRouter']
 
