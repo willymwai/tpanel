@@ -162,8 +162,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('default_db_name', 'cyberpanel'),
-        'USER': os.environ.get('default_db_user', 'root'),
-        'PASSWORD': os.environ.get('default_db_password', '1234'),
+        'USER': os.environ.get('default_db_user', 'cyberpanel'),
+        'PASSWORD': os.environ.get('default_db_password', 'Bz9gF7Hr7X4RtD'),
         'HOST': os.environ.get('default_db_host', '127.0.0.1'),
         'PORT':os.environ.get('default_db_port', '3307')
     },
@@ -171,9 +171,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('root_db_name', 'mysql'),
         'USER': os.environ.get('root_db_user', 'root'),
-        'PASSWORD': os.environ.get('root_db_password', '1234'),
+        'PASSWORD': os.environ.get('root_db_password', 'sXm5VlRaAsXkDd'),
         'HOST': os.environ.get('root_db_host', '127.0.0.1'),
-        'PORT': os.environ.get('root_db_port', '3307')
+        'PORT': os.environ.get('root_db_port', '')
     },
 }
 
