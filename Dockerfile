@@ -12,8 +12,8 @@ COPY --from=client /usr/client/build/ ./client/build/
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update
 RUN apt-get install libgpgme-dev -y
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
+COPY requirments.txt ./
+RUN pip install -r requirments.txt
 COPY . ./
 
 RUN python manage.py collectstatic --noinput
