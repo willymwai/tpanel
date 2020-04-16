@@ -7,8 +7,8 @@ SERVER_OS='Undefined'
 OUTPUT=$(cat /etc/*release)
 TEMP=$(curl --silent https://cyberpanel.net/version.txt)
 BRANCH_NAME=v${TEMP:12:3}.${TEMP:25:1}
-GIT_URL="github.com/willymwai/tpanel"
-GIT_CONTENT_URL="raw.githubusercontent.com/willymwai/tpanel"
+GIT_URL="github.com/willymwai/cyberpanel"
+GIT_CONTENT_URL="raw.githubusercontent.com/willymwai/cyberpanel"
 SERVER_COUNTRY="unknow"
 SERVER_COUNTRY=$(curl --silent --max-time 5 https://cyberpanel.sh/?country)
 if [[ ${#SERVER_COUNTRY} == "2" ]] || [[ ${#SERVER_COUNTRY} == "6" ]] ; then
