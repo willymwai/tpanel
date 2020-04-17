@@ -1362,7 +1362,7 @@ imap_folder_list_limit = 0
             command = 'systemctl enable firewalld'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            FirewallUtilities.addRule("tcp", "2083")
+            FirewallUtilities.addRule("tcp", "8090")
             FirewallUtilities.addRule("tcp", "80")
             FirewallUtilities.addRule("tcp", "443")
             FirewallUtilities.addRule("tcp", "21")
@@ -1771,7 +1771,7 @@ imap_folder_list_limit = 0
         print("                                                                   ")
         print("                                                                   ")
 
-        print(("                Visit: https://" + self.ipAddr + ":2083                "))
+        print(("                Visit: https://" + self.ipAddr + ":8090                "))
         print("                Username: admin                                    ")
         print("                Password: 1234567                                  ")
 
@@ -2293,7 +2293,7 @@ def main():
 #        os.chdir("/etc/cyberpanel")
 
     if args.port == None:
-        port = "2083"
+        port = "8090"
     else:
         port = args.port
 
