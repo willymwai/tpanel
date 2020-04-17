@@ -47,7 +47,7 @@ dnQualifier = CyberPanel
 [server_exts]
 extendedKeyUsage = 1.3.6.1.5.5.7.3.1
 EOF
-if [[ $1 == "2083" ]] ; then
+if [[ $1 == "8090" ]] ; then
 openssl req -x509 -config /usr/local/CyberCP/cert_conf -extensions 'server_exts' -nodes -days 820 -newkey rsa:2048 -keyout /usr/local/lscp/conf/key.pem -out /usr/local/lscp/conf/cert.pem
 fi
 
@@ -271,11 +271,11 @@ fi
 
 install_utility
 
-output=$(timeout 3 openssl s_client -connect 127.0.0.1:2083 2>/dev/null)
+output=$(timeout 3 openssl s_client -connect 127.0.0.1:8090 2>/dev/null)
 echo $output | grep -q "mail@example.com"
 if [[ $? == "0" ]] ; then
 # it is using default installer generated cert
-regenerate_cert 2083
+regenerate_cert 8090
 fi
 output=$(timeout 3 openssl s_client -connect 127.0.0.1:7080 2>/dev/null)
 echo $output | grep -q "mail@example.com"
