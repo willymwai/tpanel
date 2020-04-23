@@ -1258,6 +1258,32 @@ enabled=1"""
 
             command = 'chown -R lscpd:lscpd logs && chown -R lscpd:lscpd temp'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
+
+            #######
+
+            os.chdir("/usr/local/CyberCP/public/webmail/config")
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/config.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/mimetypes.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'rm defaults.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/defaults.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            os.chdir("/usr/local/CyberCP/public/webmail")
+
+            command = 'rm -rf installer'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
         except BaseException as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [downoad_and_install_roundcube]")
             return 0
