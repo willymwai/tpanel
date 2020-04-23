@@ -517,7 +517,7 @@ class preFlightsChecks:
             os.mkdir("/usr/local/CyberCP/public")
 
         ## Moving static content to lscpd location
-        command = 'mv static /usr/local/CyberCP/public/ && cp -r client/build/static/* public/static/'
+        command = 'mv static /usr/local/CyberCP/public/ public/static/ && cp -r client/build/static/* public/static/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         try:
