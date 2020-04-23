@@ -521,7 +521,13 @@ class preFlightsChecks:
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         ## Moving static content to lscpd location
-        command = 'mv client/build/static/* /usr/local/CyberCP/public/static'
+        command = 'mv client/build/static/js /usr/local/CyberCP/public/static'
+        preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+        command = 'mv client/build/static/css /usr/local/CyberCP/public/static'
+        preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+        command = 'mv client/build/static/media /usr/local/CyberCP/public/static'
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         try:
