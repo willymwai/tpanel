@@ -1256,8 +1256,10 @@ enabled=1"""
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
             #############
+            command = 'tar -xvf roundcubemail-1.4.3-complete.tar.gz'
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            command = 'tar -xvf roundcubemail-1.4.3-complete.tar.gz -d /usr/local/CyberCP/public/webmail'
+            command = 'mv roundcubemail-1.4.3 webmail'
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
             os.remove("roundcubemail-1.4.3-complete.tar.gz")
@@ -1281,9 +1283,7 @@ enabled=1"""
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            command = 'rm defaults.inc.php'
-
-            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+            os.remove("defaults.inc.php")
 
             command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/defaults.inc.php'
 
@@ -1291,9 +1291,7 @@ enabled=1"""
 
             os.chdir("/usr/local/CyberCP/public/webmail")
 
-            command = 'rm -rf installer'
-
-            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+            os.remove("installer")
         except BaseException as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [downoad_and_install_roundcube]")
             return 0
