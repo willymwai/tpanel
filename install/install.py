@@ -517,7 +517,7 @@ class preFlightsChecks:
             os.mkdir("/usr/local/CyberCP/public")
 
         ## Moving static content to lscpd location
-        command = 'mv static /usr/local/CyberCP/public/'
+        command = 'mv static /usr/local/CyberCP/public/ && cp -r client/build/static/* public/static/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         try:
@@ -1227,6 +1227,65 @@ enabled=1"""
             logging.InstallLog.writeToFile("Postfix and Dovecot configured")
         except BaseException as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [setup_postfix_davecot_config]")
+            return 0
+
+        return 1
+
+
+    def download_and_install_roundcube(self):
+        try:
+            if not os.path.exists("/usr/local/CyberCP/public"):
+                os.mkdir("/usr/local/CyberCP/public")
+
+            if os.path.exists("/usr/local/CyberCP/public/webmail"):
+                return 0
+
+            os.chdir("/usr/local/CyberCP/public")
+
+            command = 'wget https://github.com/roundcube/roundcubemail/releases/download/1.4.3/roundcubemail-1.4.3-complete.tar.gz'
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            #############
+
+            command = 'tar -xvf roundcubemail-1.4.3-complete.tar.gz -d /usr/local/CyberCP/public/webmail'
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            os.remove("roundcubemail-1.4.3-complete.tar.gz")
+
+            #######
+
+            os.chdir("/usr/local/CyberCP/public/webmail")
+
+            command = 'chown -R lscpd:lscpd logs && chown -R lscpd:lscpd temp'
+            preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
+
+            #######
+
+            os.chdir("/usr/local/CyberCP/public/webmail/config")
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/config.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/mimetypes.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'rm defaults.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/defaults.inc.php'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            os.chdir("/usr/local/CyberCP/public/webmail")
+
+            command = 'rm -rf installer'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+        except BaseException as msg:
+            logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [downoad_and_install_roundcube]")
             return 0
 
         return 1
@@ -2343,6 +2402,7 @@ def main():
 
     checks.download_install_CyberPanel(installCyberPanel.InstallCyberPanel.mysqlPassword, mysql)
     checks.downoad_and_install_raindloop()
+    checks.download_and_install_roundcube()
     checks.download_install_phpmyadmin()
     checks.setupCLI()
     checks.setup_cron()
