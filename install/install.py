@@ -1268,7 +1268,10 @@ enabled=1"""
 
             os.chdir("/usr/local/CyberCP/public/webmail")
 
-            command = 'chown -R lscpd:lscpd logs && chown -R lscpd:lscpd temp'
+            command = 'chown -R lscpd:lscpd logs'
+            preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
+
+            command = 'chown -R lscpd:lscpd temp'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             #######
@@ -1295,7 +1298,7 @@ enabled=1"""
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            command = 'mysql -u roundcube -p' + mysqlPassword + ' roundcubemail < roundcubemail.sql'
+            command = 'mysql -u roundcube -p' + mysqlPassword + ' roundcubemail < /usr/local/CyberCP/public/webmail/roundcubemail.sql'
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
