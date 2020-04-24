@@ -1326,7 +1326,7 @@ enabled=1"""
 
             for items in data:
                 if items.find("$config['db_dsnw']") > -1:
-                    DB_CONFIG = "$config['db_dsnw'] = 'mysql://roundcube:'%s'@localhost/roundcubemail';\n" % (mysqlPassword)
+                    DB_CONFIG = "$config['db_dsnw'] = 'mysql://roundcube:%s@localhost/roundcubemail';\n" % (mysqlPassword)
                     writeDataToFile.writelines(DB_CONFIG)
                 else:
                     writeDataToFile.writelines(items)
