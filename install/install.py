@@ -1300,11 +1300,12 @@ enabled=1"""
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            conn = mysql.connect(user='roundcube', passwd=mysqlPassword, cursorclass=cursors.SSCursor)
+            conn = mysql.connect(user='roundcube', passwd=mysqlPassword, cursorclass=cursors.SSCursor, database='roundcubemail')
             cursor = conn.cursor()
 
-            cursor.execute("use roundcubemail")
-            cursor.execute("source /usr/local/CyberCP/public/webmail/roundcubemail.sql")
+            file = open("/usr/local/CyberCP/public/webmail/roundcubemail.sql", 'r')
+            sql = " ".join(file.readlines())
+            cursor.execute(sql)
             conn.close()
 
             command = 'rm -rf installer'
