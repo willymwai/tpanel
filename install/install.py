@@ -1303,7 +1303,9 @@ enabled=1"""
             conn = mysql.connect(user='roundcube', passwd=mysqlPassword, cursorclass=cursors.SSCursor)
             cursor = conn.cursor()
 
-            cursor.execute("use roundcubemail;source /usr/local/CyberCP/public/webmail/roundcubemail.sql;")
+            cursor.execute("use roundcubemail")
+            cursor.execute("source /usr/local/CyberCP/public/webmail/roundcubemail.sql")
+            conn.close()
 
             command = 'rm -rf installer'
 
@@ -1323,9 +1325,10 @@ enabled=1"""
 
             for items in data:
                 if items.find("$config['db_dsnw']") > -1:
-                    SK = "$config['db_dsnw'] = 'mysql://roundcube:'%s'@localhost/roundcubemail';\n" % (mysqlPassword)
-                    writeDataToFile.writelines(SK)
-                    continue
+                    DB_CONFIG = "$config['db_dsnw'] = 'mysql://roundcube:'%s'@localhost/roundcubemail';\n" % (mysqlPassword)
+                    writeDataToFile.writelines(DB_CONFIG)
+                else:
+                    writeDataToFile.writelines(items)
 
             if self.distro == ubuntu:
                 os.fchmod(writeDataToFile.fileno(), stat.S_IRUSR | stat.S_IWUSR)
