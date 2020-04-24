@@ -1298,7 +1298,7 @@ enabled=1"""
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            command = 'mysql -uroundcube -p' + mysqlPassword + ' roundcubemail</usr/local/CyberCP/public/webmail/roundcubemail.sql'
+            command = 'mysql -uroundcube -p' + mysqlPassword + ' roundcubemail < /usr/local/CyberCP/public/webmail/roundcubemail.sql'
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
