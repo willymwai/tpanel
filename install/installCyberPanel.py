@@ -635,6 +635,7 @@ def Main(cwd, mysql, distro, ent, serial = None, port = "8090", ftp = None, dns 
         installer.fixMariaDB()
 
     mysqlUtilities.createDatabase("cyberpanel","cyberpanel",InstallCyberPanel.mysqlPassword)
+    mysqlUtilities.createDatabase("roundcubemail", "roundcube", InstallCyberPanel.mysqlPassword)
 
     if ftp == None:
         installer.installPureFTPD()

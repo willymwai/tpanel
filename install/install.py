@@ -1242,7 +1242,7 @@ enabled=1"""
         return 1
 
 
-    def download_and_install_roundcube(self):
+    def download_and_install_roundcube(self, mysqlPassword):
         try:
             if not os.path.exists("/usr/local/CyberCP/public"):
                 os.mkdir("/usr/local/CyberCP/public")
@@ -1292,6 +1292,32 @@ enabled=1"""
             os.chdir("/usr/local/CyberCP/public/webmail")
 
             os.remove("installer")
+
+            ### update password:
+
+            ### Put correct mysql passwords in config file!
+
+            logging.InstallLog.writeToFile("Updating config.inc.php!")
+
+            path = "/usr/local/CyberCP/public/webmail/config/config.inc.php"
+
+            data = open(path, "r").readlines()
+
+            writeDataToFile = open(path, "w")
+
+            for items in data:
+                if items.find("$config['db_dsnw']") > -1:
+                    SK = "$config['db_dsnw'] = 'mysql://roundcube:'%s'@localhost/roundcubemail';\n" % (mysqlPassword)
+                    writeDataToFile.writelines(SK)
+                    continue
+
+            if self.distro == ubuntu:
+                os.fchmod(writeDataToFile.fileno(), stat.S_IRUSR | stat.S_IWUSR)
+
+            writeDataToFile.close()
+
+            logging.InstallLog.writeToFile("config.inc.php updated!")
+
         except BaseException as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [downoad_and_install_roundcube]")
             return 0
@@ -2410,7 +2436,7 @@ def main():
 
     checks.download_install_CyberPanel(installCyberPanel.InstallCyberPanel.mysqlPassword, mysql)
     checks.downoad_and_install_raindloop()
-    checks.download_and_install_roundcube()
+    checks.download_and_install_roundcube(installCyberPanel.InstallCyberPanel.mysqlPassword)
     checks.download_install_phpmyadmin()
     checks.setupCLI()
     checks.setup_cron()
