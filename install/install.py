@@ -1291,7 +1291,17 @@ enabled=1"""
 
             os.chdir("/usr/local/CyberCP/public/webmail")
 
-            os.remove("installer")
+            command = 'wget https://raw.githubusercontent.com/willymwai/cyberpanel/stable/roundcube/roundcubemail.sql'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'mysql -u roundcube -p' + mysqlPassword + ' roundcubemail < roundcubemail.sql'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
+
+            command = 'rm -rf installer'
+
+            preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
             ### update password:
 
