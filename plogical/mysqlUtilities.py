@@ -91,6 +91,23 @@ class mysqlUtilities:
             return 0
 
     @staticmethod
+    def importDBFromFile(dbname, file_location):
+        try:
+
+            connection, cursor = mysqlUtilities.setupConnection()
+
+            if connection == 0:
+                return 0
+
+            cursor.execute("use " + dbname + ";source " + file_location + ";")
+
+            return 1
+
+        except BaseException as msg:
+            logging.CyberCPLogFileWriter.writeToFile(str(msg) + "[createDBUser]")
+            return 0
+
+    @staticmethod
     def createDBUser(dbuser, dbpassword):
         try:
 
