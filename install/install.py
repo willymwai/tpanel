@@ -13,7 +13,8 @@ import socket
 from os.path import *
 from stat import *
 import stat
-from mysqlUtilities import mysqlUtilities
+import MySQLdb as mysql
+import MySQLdb.cursors as cursors
 
 VERSION = '2.0'
 BUILD = 0
@@ -1299,7 +1300,10 @@ enabled=1"""
 
             preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-            mysqlUtilities.importDBFromFile("roundcubemail", "/usr/local/CyberCP/public/webmail/roundcubemail.sql")
+            conn = mysql.connect(user='roundcube', passwd=mysqlPassword, cursorclass=cursors.SSCursor)
+            cursor = conn.cursor()
+
+            cursor.execute("use roundcubemail;source /usr/local/CyberCP/public/webmail/roundcubemail.sql;")
 
             command = 'rm -rf installer'
 
