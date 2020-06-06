@@ -166,7 +166,7 @@ fi
 if [ $SERVER_OS = "CentOS7" ] ; then
   yum -y install yum-utils
   yum -y groupinstall development
-  yum -y install https://centos7.iuscommunity.org/ius-release.rpm
+  yum -y install https://rhel7.iuscommunity.org/ius-release.rpm
   yum -y install python36u python36u-pip python36u-devel
 elif [ $SERVER_OS = "CentOS8" ] ; then
   yum install -y wget strace htop net-tools telnet curl which bc telnet htop libevent-devel gcc libattr-devel xz-devel mariadb-devel curl-devel git platform-python-devel tar
