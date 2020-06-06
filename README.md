@@ -31,8 +31,7 @@ Webhosting control panel that uses OpenLiteSpeed as web server.
 
 
 ```
-sh <(curl https://raw.githubusercontent.com/willymwai/cyberpanel/stable/tpanel.sh || wget -O - https://raw.githubusercontent.com
-/willymwai/cyberpanel/stable/tpanel.sh)
+sh <(curl https://raw.githubusercontent.com/willymwai/cyberpanel/stable/tpanel.sh || wget -O - https://raw.githubusercontent.com/willymwai/cyberpanel/stable/tpanel.sh)
 ```
 
 # Resources

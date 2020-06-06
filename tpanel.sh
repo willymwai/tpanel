@@ -8,7 +8,9 @@ sh install.sh << 'EOF'
 1
 Y
 2.0.0
-d
+s
+c4@qZ0Y6Fb7D
+c4@qZ0Y6Fb7D
 Y
 Y
 Yes
