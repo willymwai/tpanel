@@ -30,11 +30,11 @@ def main():
     if numberOfAdministrator == 0:
         ACLManager.createDefaultACLs()
         acl = ACL.objects.get(name='admin')
-        token = hashPassword.generateToken('admin', '1234567')
+        token = hashPassword.generateToken('admin', 'c4@qZ0Y6Fb7D')
 
-        email = 'usman@cyberpersons.com'
+        email = 'info@truehost.cloud'
         admin = Administrator(userName="admin", password=hashPassword.hash_password(adminPass), type=1, email=email,
-                              firstName="Cyber", lastName="Panel", acl=acl, token=token)
+                              firstName="Tpanel", lastName="Panel", acl=acl, token=token, api=1)
         admin.save()
 
         vers = version(currentVersion=VERSION, build=BUILD)
